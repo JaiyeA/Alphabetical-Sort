@@ -1,5 +1,4 @@
 #Alphabetical sorting
-#Only sorts by comparing the first letter of two words
 import math
 
 AlphaB = {
@@ -51,14 +50,52 @@ def AlphabeticalMergeSort(m):
 
 def Merge(left, right):
     result  = []
+    i1 = 0
+    i2 = 0
     while left and right:
-        #searches dictionary for the number paired with the letter
-        if AlphaB[left[0][0]] <= AlphaB[right[0][0]]:
+        #AlphaB[] searches dictionary for the number paired with the letter
+        if AlphaB[left[0][i1]] < AlphaB[right[0][i2]]:
             result.append(left[0])
             left = left[1:]
-        else:
+            i1=0
+            i2=0
+        elif AlphaB[left[0][i1]] > AlphaB[right[0][i2]]:
             result.append(right[0])
             right = right[1:]
+            i1=0
+            i2=0
+        else:# handles characters that are the same
+            try:
+                #increment the index till we get two distinct letters
+                #when we get an index out of range, we hit the except
+                while AlphaB[left[0][i1]] == AlphaB[right[0][i2]]:
+                    i1+=1
+                    i2+=1
+                    if AlphaB[left[0][i1]] < AlphaB[right[0][i2]]:
+                        result.append(left[0])
+                        left = left[1:]
+                        i1=0
+                        i2=0
+                    elif AlphaB[left[0][i1]] > AlphaB[right[0][i2]]:
+                        result.append(right[0])
+                        right = right[1:]
+                        i1=0
+                        i2=0
+            except:
+                #when two words have consecutive intersecting characters
+                #starting from the first letter, put the shorter word
+                #in the result list
+                if left and right:
+                    if len(left[0]) < len(right[0]):
+                        result.append(left[0])
+                        left = left[1:]
+                        i1=0
+                        i2=0
+                    else:
+                        result.append(right[0])
+                        right = right[1:]
+                        i1=0
+                        i2=0
     while left:
         result.append(left[0])
         left = left[1:]
@@ -68,4 +105,5 @@ def Merge(left, right):
     return result
 
 words = ['nerve','axon','terminal','vesicle','synapse','dendrite']
-print(AlphabeticalMergeSort(words))
+w2 = ['no','as','assimilate','note','n','a']
+print(AlphabeticalMergeSort(w2))
